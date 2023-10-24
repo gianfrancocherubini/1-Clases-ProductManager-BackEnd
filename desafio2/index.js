@@ -3,61 +3,62 @@ const fs = require('fs');
 class ProductManager {
 
     constructor(archivo) {
-        this.path = archivo;
-        this.products = this.getProducts(); 
+      this.path = archivo;
+      this.products = this.getProducts(); 
     }
 
     getProducts() {
-        if (fs.existsSync(this.path)) {
-            const data = fs.readFileSync(this.path, 'utf-8');
-            return JSON.parse(data);
-        } else {
-            return [];
-        }
+      if (fs.existsSync(this.path)) {
+        const data = fs.readFileSync(this.path, 'utf-8');
+        return JSON.parse(data);
+      } else {
+          return [];
+      }
     }
 
     addProduct(title, description, price, thumbnail, code, stock) {
-        let productos = this.getProducts();
+      let productos = this.getProducts();
 
-        let productWithSameCode = productos.find(product => product.code === code);
+      let productWithSameCode = productos.find(product => product.code === code);
 
-        if (productWithSameCode) {
-            console.log("El producto ya está ingresado.");
-            return;
-        }
+      if (productWithSameCode) {
+        console.log("El producto ya está ingresado.");
+        return;
+      }
 
-        if (!title || !description || !price || !thumbnail || !code || !stock) {
-            console.log("Todos los campos son obligatorios.");
-            return;
-        }
+      if (!title || !description || !price || !thumbnail || !code || !stock) {
+        console.log("Todos los campos son obligatorios.");
+        return;
+      }
 
-        let id = 1;
-        if (productos.length > 0) {
-            id = productos[productos.length - 1].id + 1;
-        }
+      let id = 1;
+      if (productos.length > 0) {
+        id = productos[productos.length - 1].id + 1;
+      }
 
-        let newProduct = {
-            id,
-            title,
-            description,
-            price,
-            thumbnail,
-            code,
-            stock
-        }
+      let newProduct = {
+        id,
+        title,
+        description,
+        price,
+        thumbnail,
+        code,
+        stock
+      }
 
-        productos.push(newProduct);
-        fs.writeFileSync(this.path, JSON.stringify(productos, null, 2));
+      productos.push(newProduct);
+      fs.writeFileSync(this.path, JSON.stringify(productos, null, 2));
     }
 
     getProductById(id) {
-        const productos = this.getProducts();
-        const product = productos.find(product => product.id === id);
-        if (product) {
-            console.log("El producto encontrado es:", product);
-        } else {
-            console.log("Producto no encontrado");
-        }
+      const productos = this.getProducts();
+      const product = productos.find(product => product.id === id);
+
+      if (product) {
+        console.log("El producto encontrado es:", product);
+      } else {
+          console.log("Producto no encontrado");
+      }
     }
 
     updateProduct(id, fieldToUpdate, newValue) {
@@ -65,8 +66,8 @@ class ProductManager {
       const productIndex = productos.findIndex(product => product.id === id);
 
       if (productIndex === -1) {
-          console.log("Producto no encontrado.");
-          return;
+        console.log("Producto no encontrado.");
+        return;
       }
 
       const updatedProduct = { ...productos[productIndex] };
@@ -81,45 +82,46 @@ class ProductManager {
   }
 
     deleteProduct(id) {
-        const productos = this.getProducts();
-        const productIndex = productos.findIndex(product => product.id === id);
+      const productos = this.getProducts();
+      const productIndex = productos.findIndex(product => product.id === id);
 
-        if (productIndex === -1) {
-            console.log("Producto no encontrado. No se puede eliminar.");
-            return;
-        }
+      if (productIndex === -1) {
+        console.log("Producto no encontrado. No se puede eliminar.");
+        return;
+      }
 
-        productos.splice(productIndex, 1);
+      productos.splice(productIndex, 1);
 
-        fs.writeFileSync(this.path, JSON.stringify(productos, null, 2));
+      fs.writeFileSync(this.path, JSON.stringify(productos, null, 2));
 
-        console.log("Producto eliminado con éxito.");
+      console.log("Producto eliminado con éxito.");
     }
 
 }
 
 let product = new ProductManager('./desafio2/products.json');
 
-//producto con propiedad vacia
+// PRODUCTO CON PROPIEDAD VVACIA
 // product.addProduct('Zapatilla deportiva',3000,'https://www.nike.com.ar/zapatillas-nike-air-max-dawn-dr2395-100/p', 'AA123', 50)
 
-// //producto completo
+// PRODUCTO COMPLETO
 // product.addProduct('Zapatilla','Zapatilla deportiva',2000,'https://www.nike.com.ar/zapatillas-nike-air-max-dawn-dr2395-100/p', 'AA1234', 50)
 
-// //producto con codigo igual
+// PRODUCTO CON MISMO CODIGO
 // product.addProduct('Zapatilla','Zapatilla deportiva',2000,'https://www.nike.com.ar/zapatillas-nike-air-max-dawn-dr2395-100/p', 'AA1234', 50)
 
-// //producto completo nuevo 
+// PRODUCTO COMPLETO NUEVO
 // product.addProduct('Remera Nike','Remera deportiva',1500,'https://www.nike.com.ar/nike-drifit-strike-dv9225-043/p', 'AA1235', 15)
 
-//retorno de productos agregados
+// BUSCAR TODOS LOS PRODUCTOS
 // console.log(product.getProducts())
 
-// retorno de producto segun id
+// BUSCAR PRODUCTO SEGUN ID
 // product.getProductById(1)
  
-// actualizacion de producto
+// ACTUALIZACION DE PRODUCTO
 // product.updateProduct(1, "price", 99.99);
 
+// BORRAR PRODUCTO
 // product.deleteProduct(1);
 // console.log(product.getProducts())
